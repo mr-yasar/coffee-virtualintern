@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block title %}Aroma Lounge - Premium Coffee Ratings{% endblock %}
+
+{% block content %}
+<header class="app-header">
+    <div class="header-logo">
+        <i class="fa-solid fa-mug-hot"></i>
+        <h1>Aroma Lounge</h1>
+    </div>
+    <p class="header-subtitle">Discover, rate, and vote for your favorite artisan brews.</p>
+    <button class="btn btn-primary" id="open-add-modal-btn">
+        <i class="fa-solid fa-plus"></i> Add New Blend
+    </button>
+</header>
+
+<!-- Search, Filter & Sort Toolbar -->
+<section class="toolbar-section">
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="Search by name or description...">
+    </div>
+    
+    <div class="filters-container">
+        <div class="roast-filters" id="roast-filters">
+            <button class="roast-btn active" data-roast="All">All Roasts</button>
+            <button class="roast-btn" data-roast="Light">Light</button>
+            <button class="roast-btn" data-roast="Medium">Medium</button>
+            <button class="roast-btn" data-roast="Dark">Dark</button>
+        </div>
+        
+        <div class="sort-container">
+            <label for="sort-select">Sort By</label>
+            <div class="select-wrapper">
+                <select id="sort-select">
+                    <option value="votes">Most Voted</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="name">Alphabetical</option>
+                </select>
+                <i class="fa-solid fa-chevron-down select-icon"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Coffee Card Grid -->
+<section class="coffee-grid-section">
+    <div class="loading-indicator" id="loading-indicator">
+        <div class="coffee-drip"></div>
+        <p>Brewing list...</p>
+    </div>
+    <div class="coffee-grid" id="coffee-grid" style="display: none;">
+        <!-- Dynamically generated via JS -->
+    </div>
+    <div class="no-results" id="no-results" style="display: none;">
+        <i class="fa-regular fa-face-frown-open"></i>
+        <h3>No coffee blends match your criteria</h3>
+        <p>Try adjusting your filters or search keywords.</p>
+    </div>
+</section>
+
+<!-- MODAL: Add New Coffee -->
+<div class="modal-overlay" id="add-coffee-modal">
+    <div class="modal-card glass-panel">
+        <div class="modal-header">
+            <h2>Add New Coffee Blend</h2>
+            <button class="close-modal-btn" data-target="add-coffee-modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="add-coffee-form">
+                <div class="form-group">
+                    <label for="coffee-name">Coffee Name *</label>
+                    <input type="text" id="coffee-name" required placeholder="e.g., Ethiopian Yirgacheffe">
+                </div>
+                
+                <div class="form-group">
+                    <label>Roast Level *</label>
+                    <div class="form-radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="coffee-roast" value="Light" checked>
+                            <span class="custom-radio">Light</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="coffee-roast" value="Medium">
+                            <span class="custom-radio">Medium</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="coffee-roast" value="Dark">
+                            <span class="custom-radio">Dark</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="coffee-description">Description</label>
+                    <textarea id="coffee-description" rows="3" placeholder="Describe the aroma, flavor notes, origin, etc."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Choose Beverage Icon Style</label>
+                    <div class="image-select-grid">
+                        <label class="img-option">
+                            <input type="radio" name="coffee-image" value="espresso" checked>
+                            <div class="img-preview espresso-bg">Espresso</div>
+                        </label>
+                        <label class="img-option">
+                            <input type="radio" name="coffee-image" value="cappuccino">
+                            <div class="img-preview cappuccino-bg">Cappuccino</div>
+                        </label>
+                        <label class="img-option">
+                            <input type="radio" name="coffee-image" value="flat_white">
+                            <div class="img-preview flat-white-bg">Flat White</div>
+                        </label>
+                        <label class="img-option">
+                            <input type="radio" name="coffee-image" value="macchiato">
+                            <div class="img-preview macchiato-bg">Macchiato</div>
+                        </label>
+                        <label class="img-option">
+                            <input type="radio" name="coffee-image" value="cold_brew">
+                            <div class="img-preview cold-brew-bg">Cold Brew</div>
+                        </label>
+                        <label class="img-option">
+                            <input type="radio" name="coffee-image" value="default">
+                            <div class="img-preview generic-bg">Generic</div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal-btn" data-target="add-coffee-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Blend</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Coffee Detail & Reviews -->
+<div class="modal-overlay" id="coffee-detail-modal">
+    <div class="modal-card glass-panel modal-lg">
+        <div class="modal-header">
+            <h2 id="detail-modal-title">Coffee Details</h2>
+            <button class="close-modal-btn" data-target="coffee-detail-modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="modal-body detail-layout">
+            <!-- Left Side: Coffee info summary -->
+            <div class="detail-info-column">
+                <div class="detail-image-container">
+                    <img id="detail-image" src="" alt="Coffee Blend">
+                    <span class="badge roast-badge" id="detail-roast-badge">Medium</span>
+                </div>
+                <div class="detail-text">
+                    <p id="detail-description">Coffee description goes here.</p>
+                </div>
+                
+                <div class="detail-stats-card glass-panel">
+                    <div class="stat-box">
+                        <span class="stat-number" id="detail-rating-avg">0.0</span>
+                        <div class="stat-stars" id="detail-stars-visual">
+                            <!-- Star icons -->
+                        </div>
+                        <span class="stat-label" id="detail-review-count">0 reviews</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="detail-votes-count">0</span>
+                        <span class="stat-label">Votes</span>
+                        <button class="btn btn-icon btn-vote" id="detail-vote-btn">
+                            <i class="fa-solid fa-heart"></i> Vote
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Side: Reviews section -->
+            <div class="detail-reviews-column">
+                <h3>Customer Ratings</h3>
+                
+                <!-- Scrollable Review List -->
+                <div class="reviews-list-container" id="reviews-list-container">
+                    <!-- Reviews populated by JS -->
+                </div>
+                
+                <!-- Review Form -->
+                <form id="add-review-form" class="add-review-form glass-panel">
+                    <h4>Leave a Review</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group flex-2">
+                            <label for="reviewer-name">Your Name *</label>
+                            <input type="text" id="reviewer-name" required placeholder="e.g., John Doe">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>Your Rating *</label>
+                            <div class="star-rating-selector" id="star-rating-selector">
+                                <span class="star-select" data-rating="1"><i class="fa-regular fa-star"></i></span>
+                                <span class="star-select" data-rating="2"><i class="fa-regular fa-star"></i></span>
+                                <span class="star-select" data-rating="3"><i class="fa-regular fa-star"></i></span>
+                                <span class="star-select" data-rating="4"><i class="fa-regular fa-star"></i></span>
+                                <span class="star-select" data-rating="5"><i class="fa-regular fa-star"></i></span>
+                            </div>
+                            <input type="hidden" id="review-rating-value" value="" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewer-comment">Your Comment</label>
+                        <textarea id="reviewer-comment" rows="2" placeholder="Tell us what you think of this roast..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">Submit Rating</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast notifications -->
+<div class="toast-notification" id="toast-notification">
+    <i class="fa-solid fa-circle-check toast-icon"></i>
+    <span class="toast-message">Action successful!</span>
+</div>
+{% endblock %}

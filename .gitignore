@@ -1,0 +1,24 @@
+# Python compilation files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases & local configs
+coffeeshop.db
+instance/
+.env
+.env.local
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
