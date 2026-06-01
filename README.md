@@ -1,3 +1,7 @@
+# Coffee Virtual Intern
+
+This repository contains the Coffee Shop virtual intern project, a Flask-based web application for browsing a menu and placing coffee orders. The app is organized with templates, static assets, and helper scripts to make it easy to contribute and extend.
+
 1. This repository contains the Coffee Shop virtual intern project.
 
 2. The app uses Flask for backend and serves HTML/CSS/JS from templates and static folders.
