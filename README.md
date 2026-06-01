@@ -5,3 +5,5 @@
 3. Start the app with run_app.bat or python app.py after installing requirements.
 
 4. The project includes a user interface for viewing the menu and placing orders.
+
+5. Contributions are welcome: add features, fix bugs, improve UI, or update docs.
