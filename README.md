@@ -9,3 +9,5 @@
 5. Contributions are welcome: add features, fix bugs, improve UI, or update docs.
 
 6. Use Git by committing changes locally and pushing to GitHub for each contribution.
+
+7. The project structure includes app.py, models.py, templates/, static/, and helper scripts.
