@@ -11,3 +11,5 @@
 6. Use Git by committing changes locally and pushing to GitHub for each contribution.
 
 7. The project structure includes app.py, models.py, templates/, static/, and helper scripts.
+
+8. Refer to requirements.txt for Python dependencies and run tests before submitting PRs.
