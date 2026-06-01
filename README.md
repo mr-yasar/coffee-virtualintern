@@ -7,3 +7,5 @@
 4. The project includes a user interface for viewing the menu and placing orders.
 
 5. Contributions are welcome: add features, fix bugs, improve UI, or update docs.
+
+6. Use Git by committing changes locally and pushing to GitHub for each contribution.
